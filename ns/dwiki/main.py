@@ -34,9 +34,9 @@ class Main:
         self.wTree = gtk.glade.XML(gladefile)
         self.wTree.signal_autoconnect(self)
         self.window = self.wTree.get_widget('MainWindow')
-        self.pagesTree = self.wTree.get_widget('notesTree')
+        self.pagesTree = self.wTree.get_widget('pagesTree')
         self.booksTree = self.wTree.get_widget('booksTree')
-        
+        self.pagesTree.connect('button-press-event', self.on_page_clicked)
         self.setup_store()
 
         self.setup_books()
@@ -77,6 +77,12 @@ class Main:
 
     def on_newpage_clicked(self, widget):
         editor.Editor(self.store, models.WikiPage())
+
+    def on_page_clicked(self, widget, event):
+        if event.type == gtk.gdk._2BUTTON_PRESS:
+            model, sel = self.pagesTree.get_selection().get_selected()
+            page_name = model.get_value(sel, 0)
+            editor.Editor(self.store, self.store.get_page(page_name))
 
     def on_search_clicked(self, widget):
         pass

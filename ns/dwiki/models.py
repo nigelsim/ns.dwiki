@@ -25,7 +25,7 @@ class WikiStore:
         f.write(page.body)
         f.close()
         
-        if page.original_title != None:
+        if page.original_title != None and page.original_title != page.title:
             page_file = self.path + os.sep + page.original_title
             os.remove(page_file)
         return
