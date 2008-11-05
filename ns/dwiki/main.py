@@ -26,7 +26,7 @@ import gtk.glade
 import os
 
 import ns.dwiki
-from ns.dwiki import models 
+from ns.dwiki import models, editor
 
 class Main:
     def __init__(self):
@@ -75,8 +75,11 @@ class Main:
         col.pack_start(cell, True)
         col.add_attribute(cell, 'text', 0)
 
+    def on_newpage_clicked(self, widget):
+        editor.Editor(self.store, models.WikiPage())
+
     def on_search_clicked(self, widget):
-        self.notesStore.append(['t'])
+        pass
 
     def main(self):
         gtk.main()
