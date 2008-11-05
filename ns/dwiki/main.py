@@ -42,7 +42,14 @@ class Main:
         self.setup_books()
         self.setup_pages()
         self.window.connect("destroy", gtk.main_quit)
+        self.visible = True
         self.window.show()
+        
+        self.icon = gtk.StatusIcon()
+        self.icon.set_from_stock('gtk-spell-check')
+        self.icon.set_visible(True)
+        self.icon.connect('activate', self.on_status_icon)
+        
         self.refresh_pages()
 
     def setup_store(self):
@@ -83,6 +90,14 @@ class Main:
             model, sel = self.pagesTree.get_selection().get_selected()
             page_name = model.get_value(sel, 0)
             editor.Editor(self.store, self.store.get_page(page_name))
+
+    def on_status_icon(self, widget):
+        self.visible = not self.visible
+        if self.visible:
+            self.window.show()
+        else:
+            self.window.hide()
+            
 
     def on_search_clicked(self, widget):
         pass
