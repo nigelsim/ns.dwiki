@@ -34,17 +34,14 @@ class Main:
         self.wTree = gtk.glade.XML(gladefile)
         self.wTree.signal_autoconnect(self)
         self.window = self.wTree.get_widget('MainWindow')
-        self.notesTree = self.wTree.get_widget('notesTree')
+        self.pagesTree = self.wTree.get_widget('notesTree')
         self.booksTree = self.wTree.get_widget('booksTree')
         
         self.setup_store()
 
         self.setup_books()
-        self.setup_notes()
-        #self.inputFile = self.wTree.get_widget('inputFile')
-        #self.outputFile = self.wTree.get_widget('outputFile')
+        self.setup_pages()
         self.window.connect("destroy", gtk.main_quit)
-        #self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.show()
         self.refresh_pages()
 
@@ -53,9 +50,9 @@ class Main:
         self.store = models.WikiStore(path)
         
     def refresh_pages(self):
-        self.notesStore.clear()
+        self.pagesStore.clear()
         for page in self.store.get_pages():
-            self.notesStore.append([page])
+            self.pagesStore.append([page])
 
     def setup_books(self):
         self.booksStore = gtk.ListStore(str)
@@ -68,11 +65,11 @@ class Main:
         col.pack_start(cell, True)
         col.add_attribute(cell, 'text', 0)
 
-    def setup_notes(self):
-        self.notesStore = gtk.ListStore(str)
-        self.notesTree.set_model(self.notesStore)
-        col = gtk.TreeViewColumn('Notes')
-        self.notesTree.append_column(col)
+    def setup_pages(self):
+        self.pagesStore = gtk.ListStore(str)
+        self.pagesTree.set_model(self.pagesStore)
+        col = gtk.TreeViewColumn('Pages')
+        self.pagesTree.append_column(col)
 
         cell = gtk.CellRendererText()
         col.pack_start(cell, True)
