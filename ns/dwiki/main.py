@@ -23,7 +23,10 @@ pygtk.require('2.0')
 import gtk
 import gtk.glade
 
+import os
+
 import ns.dwiki
+from ns.dwiki import models 
 
 class Main:
     def __init__(self):
@@ -33,6 +36,8 @@ class Main:
         self.window = self.wTree.get_widget('MainWindow')
         self.notesTree = self.wTree.get_widget('notesTree')
         self.booksTree = self.wTree.get_widget('booksTree')
+        
+        self.setup_store()
 
         self.setup_books()
         self.setup_notes()
@@ -41,10 +46,19 @@ class Main:
         self.window.connect("destroy", gtk.main_quit)
         #self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.show()
+        self.refresh_pages()
+
+    def setup_store(self):
+        path = os.getenv('HOME') + os.sep + '.dwiki'
+        self.store = models.WikiStore(path)
+        
+    def refresh_pages(self):
+        self.notesStore.clear()
+        for page in self.store.get_pages():
+            self.notesStore.append([page])
 
     def setup_books(self):
         self.booksStore = gtk.ListStore(str)
-        self.booksStore.append(['test1'])
         self.booksTree.set_model(self.booksStore)
         col = gtk.TreeViewColumn('Books')
         col.pack_start(gtk.CellRendererText())
@@ -56,8 +70,6 @@ class Main:
 
     def setup_notes(self):
         self.notesStore = gtk.ListStore(str)
-        self.notesStore.append(['test1'])
-        self.notesStore.append(['test1'])
         self.notesTree.set_model(self.notesStore)
         col = gtk.TreeViewColumn('Notes')
         self.notesTree.append_column(col)
