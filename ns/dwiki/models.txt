@@ -1,0 +1,39 @@
+The Models for dwiki
+===================
+
+The models provide the storage and retreival of the pages and the books. This
+will one day be broken up so the backend is plugable, but for now it is just a 
+folder, which is stored in git.
+
+    >>> from ns.dwiki import models
+    >>> store = models.WikiStore('/tmp/mystore')
+    >>> store.get_pages()
+    []
+    
+Creating a page is straight forward
+    >>> new_page = models.WikiPage()
+    >>> new_page.title = 'My title'
+    >>> new_page.body = """
+    ...   Some text
+    ...  * Some more text
+    ... """
+
+Saving it requires a call to the store
+    >>> store.save_page(new_page)
+    >>> store.get_pages()
+    ['My title']
+    
+Now we can retrieve the file
+    >>> new_page2 = store.get_page('My title')
+    >>> new_page2.title
+    'My title'
+    
+We can rename the page
+    >>> new_page2.title = 'My Title - new'
+    >>> store.save_page(new_page2)
+    >>> store.get_pages()
+    ['My Title - new']
+
+And finally DESTROY
+    >>> for page in store.get_pages():
+    ...     store.delete_page(page)
