@@ -29,7 +29,7 @@ import ns.dwiki
 from ns.dwiki import models 
 
 class Editor:
-    def __init__(self, store, page):
+    def __init__(self, page):
         gladefile = ns.dwiki.__file__[:-12] + 'dwiki.glade'
         self.wTree = gtk.glade.XML(gladefile)
         self.wTree.signal_autoconnect(self)
@@ -41,7 +41,6 @@ class Editor:
         self.title.set_text(page.title or 'Untitled')
         
         self.page = page
-        self.store = store
         
         self.window.show()
 
@@ -49,5 +48,5 @@ class Editor:
         buf = self.editor.get_buffer()
         self.page.body = buf.get_text(buf.get_start_iter(), buf.get_end_iter())
         self.page.title = self.title.get_text()
-        self.store.save_page(self.page)
+        self.page.save()
 

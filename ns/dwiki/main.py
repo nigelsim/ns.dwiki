@@ -54,11 +54,13 @@ class Main:
 
     def setup_store(self):
         path = os.getenv('HOME') + os.sep + '.dwiki'
-        self.store = models.WikiBook(path)
+        self.library = models.WikiLibrary(path)
+        self.shelf = models.WikiShelf(self.library, 'Default')
+        self.book = models.WikiBook(self.shelf, 'Default')
         
     def refresh_pages(self):
         self.pagesStore.clear()
-        for page in self.store.get_pages():
+        for page in self.book.get_pages():
             self.pagesStore.append([page])
 
     def setup_books(self):
@@ -83,13 +85,13 @@ class Main:
         col.add_attribute(cell, 'text', 0)
 
     def on_newpage_clicked(self, widget):
-        editor.Editor(self.store, models.WikiPage())
+        editor.Editor(models.WikiPage(self.book))
 
     def on_page_clicked(self, widget, event):
         if event.type == gtk.gdk._2BUTTON_PRESS:
             model, sel = self.pagesTree.get_selection().get_selected()
             page_name = model.get_value(sel, 0)
-            editor.Editor(self.store, self.store.get_page(page_name))
+            editor.Editor(self.book.get_page(page_name))
 
     def on_status_icon(self, widget):
         self.visible = not self.visible
