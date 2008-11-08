@@ -22,6 +22,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gtk.glade
+import gtkhtml2
 
 import os
 
@@ -36,14 +37,19 @@ class Main:
         self.window = self.wTree.get_widget('MainWindow')
         self.pagesTree = self.wTree.get_widget('pagesTree')
         self.booksTree = self.wTree.get_widget('booksTree')
-        self.pagesTree.connect('button-press-event', self.on_page_clicked)
         self.setup_store()
+        
+        self.renderArea = self.wTree.get_widget('renderArea')
+        self.doc = gtkhtml2.Document()
+        html = gtkhtml2.View()
+        html.set_document(self.doc)
+        self.renderArea.add(html)
 
         self.setup_books()
         self.setup_pages()
         self.window.connect("destroy", gtk.main_quit)
         self.visible = True
-        self.window.show()
+        self.window.show_all()
         
         self.icon = gtk.StatusIcon()
         self.icon.set_from_stock('gtk-spell-check')
@@ -87,11 +93,21 @@ class Main:
     def on_newpage_clicked(self, widget):
         editor.Editor(models.WikiPage(self.book))
 
-    def on_page_clicked(self, widget, event):
-        if event.type == gtk.gdk._2BUTTON_PRESS:
-            model, sel = self.pagesTree.get_selection().get_selected()
+    def on_pagesTree_cursor_changed(self, widget):
+        model, sel = self.pagesTree.get_selection().get_selected()
+        if sel != None:
             page_name = model.get_value(sel, 0)
-            editor.Editor(self.book.get_page(page_name))
+            self.doc.clear()
+            self.doc.open_stream('text/html')
+            self.doc.write_stream('<html><body><b>%s</b></body></html>'%page_name)
+            self.doc.close_stream()
+
+    def on_pagesTree_button_press_event(self, widget, event):
+        model, sel = self.pagesTree.get_selection().get_selected()
+        if sel != None:
+            page_name = model.get_value(sel, 0)
+            if event.type == gtk.gdk._2BUTTON_PRESS:
+                editor.Editor(self.book.get_page(page_name))
 
     def on_status_icon(self, widget):
         self.visible = not self.visible
