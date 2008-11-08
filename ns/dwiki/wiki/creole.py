@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """
-    Creole wiki markup parser
+    Creole wgit-iki markup parser
 
     See http://wikicreole.org/ for latest specs.
 
@@ -57,10 +57,12 @@ class Rules:
             >>
         )'''
     code = r'(?P<code> {{{ (?P<code_text>.*?) }}} )'
-    emph = r'(?P<emph> (?<!:)// )' # there must be no : in front of the //
+    emph = r"(?P<emph> ''' )" # there must be no : in front of the //
                                    # avoids italic rendering in urls with
                                    # unknown protocols
-    strong = r'(?P<strong> \*\* )'
+    strong = r"(?P<strong> '' )"
+    strong_emph = r"(?P<strong_emph> '''' )"
+    
     linebreak = r'(?P<break> \\\\ )'
     escape = r'(?P<escape> ~ (?P<escaped_char>\S) )'
     char =  r'(?P<char> . )'
@@ -133,7 +135,7 @@ class Parser:
         Rules.pre, Rules.list, Rules.table, Rules.text]), re.X | re.U | re.M)
     # For inline elements:
     inline_re = re.compile('|'.join([Rules.link, Rules.url, Rules.macro,
-        Rules.code, Rules.image, Rules.strong, Rules.emph, Rules.linebreak,
+        Rules.code, Rules.image, Rules.strong_emph, Rules.emph, Rules.strong, Rules.linebreak,
         Rules.escape, Rules.char]), re.X | re.U)
 
     def __init__(self, raw):
@@ -330,6 +332,13 @@ class Parser:
             self.cur = DocNode('strong', self.cur)
         else:
             self.cur = self._upto(self.cur, ('strong', )).parent
+        self.text = None
+
+    def _strong_emph_repl(self, groups):
+        if self.cur.kind != 'strong_emph':
+            self.cur = DocNode('strong_emph', self.cur)
+        else:
+            self.cur = self._upto(self.cur, ('strong_emph', )).parent
         self.text = None
 
     def _break_repl(self, groups):

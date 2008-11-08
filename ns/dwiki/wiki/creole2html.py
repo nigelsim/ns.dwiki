@@ -111,6 +111,9 @@ class HtmlEmitter:
     def table_head_emit(self, node):
         return u'<th>%s</th>' % self.emit_children(node)
 
+    def strong_emph_emit(self, node):
+        return u'<i><b>%s</b></i>' % self.emit_children(node)
+
     def emphasis_emit(self, node):
         return u'<i>%s</i>' % self.emit_children(node)
 
