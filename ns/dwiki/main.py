@@ -28,6 +28,7 @@ import os
 
 import ns.dwiki
 from ns.dwiki import models, editor
+from ns.dwiki.wiki import wiki
 
 class Main:
     def __init__(self):
@@ -97,9 +98,10 @@ class Main:
         model, sel = self.pagesTree.get_selection().get_selected()
         if sel != None:
             page_name = model.get_value(sel, 0)
+            page = self.book.get_page(page_name)
             self.doc.clear()
             self.doc.open_stream('text/html')
-            self.doc.write_stream('<html><body><b>%s</b></body></html>'%page_name)
+            self.doc.write_stream('<html></head><body><h1>%s</h1><hr/>%s</body></html>'%(page.title, wiki.render(page.body)))
             self.doc.close_stream()
 
     def on_pagesTree_button_press_event(self, widget, event):
