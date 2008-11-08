@@ -1,0 +1,42 @@
+The Models for dwiki
+===================
+
+    >>> from ns.dwiki.wiki import wiki
+    >>> print wiki.render('test')
+    <p>test </p>
+    <BLANKLINE>
+
+    >>> print wiki.render(""" * one
+    ...  * two
+    ...  """)
+    <ul>
+    <li>one</li>
+    <li>two</li>
+    </ul>
+    <BLANKLINE>
+
+    >>> print wiki.render("""= Heading one =
+    ... Stuff
+    ... {{{
+    ... PreFromatted
+    ...   Text
+    ... }}}
+    ...    
+    ...  """)
+    <h1>Heading one</h1>
+    <p>Stuff </p>
+    <pre>PreFromatted
+      Text</pre>
+    
+    >>> print wiki.render("""CamelCaseWord
+    ... [Another link] 
+    ... """)
+    <h1>Heading one</h1>
+    <p>Stuff </p>
+    <pre>PreFromatted
+      Text</pre>
+    
+    >>> print wiki.render("""''bold'' '''italics''' ''''bolditalics''''
+    ... """)
+    <p><b>bold</b> <i>italics</i> <i><b>bolditalics</b></i> </p>
+    <BLANKLINE>
