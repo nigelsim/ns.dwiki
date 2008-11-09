@@ -58,16 +58,8 @@ class WikiShelf:
         book = WikiBook(self, name)
         return book
     
-    def save_page(self, page):
-        page_file = self.path + os.sep + page.title
-        f = open(page_file, 'w')
-        f.write(page.body)
-        f.close()
-        
-        if page.original_title != None and page.original_title != page.title:
-            page_file = self.path + os.sep + page.original_title
-            os.remove(page_file)
-        return
+    def has_book(self, name):
+        return name in self.get_books()
     
     def delete_book(self, name):
         page_file = self.path + os.sep + name
@@ -109,6 +101,9 @@ class WikiBook:
         page.body = f.read()
         f.close()        
         return page
+    
+    def has_page(self, name):
+        return name in self.get_pages()
     
     def delete_page(self, name):
         page_file = self.path + os.sep + name

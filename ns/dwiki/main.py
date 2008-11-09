@@ -42,6 +42,7 @@ class Main:
         
         self.renderArea = self.wTree.get_widget('renderArea')
         self.doc = gtkhtml2.Document()
+        self.doc.connect('link_clicked', self.link_clicked)
         html = gtkhtml2.View()
         html.set_document(self.doc)
         self.renderArea.add(html)
@@ -99,10 +100,35 @@ class Main:
         if sel != None:
             page_name = model.get_value(sel, 0)
             page = self.book.get_page(page_name)
-            self.doc.clear()
-            self.doc.open_stream('text/html')
-            self.doc.write_stream('<html></head><body><h1>%s</h1><hr/>%s</body></html>'%(page.title, wiki.render(page.body)))
-            self.doc.close_stream()
+            self.render_page(page)
+            
+    def link_clicked(self, document, link):
+        link.strip()
+        if link.find('/') > 0:
+            book = link[0:link.find('/')]
+            if self.shelf.has_book(book):
+                book = self.shelf.get_book(book)
+            else:
+                book = WikiBook(self.shelf, book)
+            page = link[link.find('/')+1:]
+        else:
+            book = self.book
+            page = link
+            
+        if book.has_page(page):
+            actual_page = book.get_page(page)
+            self.render_page(actual_page)
+        else:
+            actual_page = models.WikiPage(book)
+            actual_page.title = page
+            editor.Editor(actual_page)
+            
+            
+    def render_page(self, page):
+        self.doc.clear()
+        self.doc.open_stream('text/html')
+        self.doc.write_stream('<html></head><body><h1>%s</h1><hr/>%s</body></html>'%(page.title, wiki.render(page.body)))
+        self.doc.close_stream()
 
     def on_pagesTree_button_press_event(self, widget, event):
         model, sel = self.pagesTree.get_selection().get_selected()
