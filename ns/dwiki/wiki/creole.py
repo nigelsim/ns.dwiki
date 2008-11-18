@@ -19,6 +19,8 @@
     @copyright: 2007 MoinMoin:RadomirDopieralski (creole 0.5 implementation),
                 2007 MoinMoin:ThomasWaldmann (updates)
     @license: GNU GPL, see COPYING for details.
+    
+    http://wiki.sheep.art.pl/Wiki%20Creole%20Parser%20in%20Python
 """
 
 import re
