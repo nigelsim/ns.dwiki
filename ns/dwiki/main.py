@@ -63,8 +63,13 @@ class Main:
     def setup_store(self):
         path = os.getenv('HOME') + os.sep + '.dwiki'
         self.library = models.WikiLibrary(path)
+        self.library.set_on_change(self.on_change)
+        
         self.shelf = models.WikiShelf(self.library, 'Default')
         self.book = models.WikiBook(self.shelf, 'Default')
+
+    def on_change(self):
+        self.refresh_pages()
         
     def refresh_pages(self):
         self.pagesStore.clear()

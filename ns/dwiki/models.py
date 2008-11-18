@@ -10,7 +10,10 @@ class WikiLibrary:
         self.path = path
         if not os.path.exists(self.path):
              os.mkdir(self.path)
-        
+
+    def set_on_change(self, func):
+        self.on_change = func
+    
     def get_shelves(self):
         return os.listdir(self.path)
     
@@ -24,6 +27,7 @@ class WikiLibrary:
     def delete_shelf(self, name):
         page_file = self.path + os.sep + name
         os.rmdir(page_file)
+        self.on_change()
 
 class WikiShelf:
     def __init__(self, library, name):
@@ -64,6 +68,7 @@ class WikiShelf:
     def delete_book(self, name):
         page_file = self.path + os.sep + name
         os.rmdir(page_file)
+        self._library.on_change()
         
 
 class WikiBook:
@@ -108,6 +113,7 @@ class WikiBook:
     def delete_page(self, name):
         page_file = self.path + os.sep + name
         os.remove(page_file)
+        self._shelf._library.on_change()
         
 class WikiPage:
     def __init__(self, book, original_title=None):
@@ -124,6 +130,9 @@ class WikiPage:
         if self.original_title != None and self.original_title != self.title:
             page_file = self._book.path + os.sep + self.original_title
             os.remove(page_file)
+        self._original_title = self.title
+
+        self._book._shelf._library.on_change()
         return
     
     @apply
