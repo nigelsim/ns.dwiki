@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Nov  8 18:03:07 2008 -->
+<!--Generated with glade3 3.4.5 on Tue Nov 18 22:11:19 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
     <property name="default_width">300</property>
@@ -96,6 +96,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="headers_clickable">True</property>
+                    <signal name="cursor_changed" handler="on_booksTree_cursor_changed"/>
                   </widget>
                   <packing>
                     <property name="resize">False</property>

@@ -32,14 +32,14 @@ from ns.dwiki.wiki import wiki
 
 class Main:
     def __init__(self):
-        gladefile = ns.dwiki.__file__[:-12] + 'dwiki.glade'
+        gladefile = ns.dwiki.__file__[:-12] + os.sep + 'dwiki.glade'
         self.wTree = gtk.glade.XML(gladefile)
         self.wTree.signal_autoconnect(self)
         self.window = self.wTree.get_widget('MainWindow')
         self.pagesTree = self.wTree.get_widget('pagesTree')
         self.booksTree = self.wTree.get_widget('booksTree')
         self.setup_store()
-        
+
         self.renderArea = self.wTree.get_widget('renderArea')
         self.doc = gtkhtml2.Document()
         self.doc.connect('link_clicked', self.link_clicked)
@@ -52,32 +52,42 @@ class Main:
         self.window.connect("destroy", gtk.main_quit)
         self.visible = True
         self.window.show_all()
-        
+
         self.icon = gtk.StatusIcon()
         self.icon.set_from_stock('gtk-spell-check')
         self.icon.set_visible(True)
         self.icon.connect('activate', self.on_status_icon)
-        
+
+        self.refresh_books()
         self.refresh_pages()
 
     def setup_store(self):
         path = os.getenv('HOME') + os.sep + '.dwiki'
         self.library = models.WikiLibrary(path)
         self.library.set_on_change(self.on_change)
-        
+
         self.shelf = models.WikiShelf(self.library, 'Default')
         self.book = models.WikiBook(self.shelf, 'Default')
 
     def on_change(self):
+        self.refresh_books()
         self.refresh_pages()
-        
+
+    def refresh_books(self):
+        self.booksStore.clear()
+        for shelf in self.library.get_shelves():
+            shelf_iter = self.booksStore.append(None, [shelf])
+            shelf = self.library.get_shelf(shelf)
+            for book in shelf.get_books():
+                book_iter = self.booksStore.append(shelf_iter, [book])
+
     def refresh_pages(self):
         self.pagesStore.clear()
         for page in self.book.get_pages():
             self.pagesStore.append([page])
 
     def setup_books(self):
-        self.booksStore = gtk.ListStore(str)
+        self.booksStore = gtk.TreeStore(str)
         self.booksTree.set_model(self.booksStore)
         col = gtk.TreeViewColumn('Books')
         col.pack_start(gtk.CellRendererText())
@@ -100,13 +110,24 @@ class Main:
     def on_newpage_clicked(self, widget):
         editor.Editor(models.WikiPage(self.book))
 
+    def on_booksTree_cursor_changed(self, widget):
+        model, sel = self.booksTree.get_selection().get_selected()
+        parent_iter = self.booksStore.iter_parent(sel)
+        if parent_iter != None:
+            shelf_name = model.get_value(parent_iter, 0)
+            book_name = model.get_value(sel, 0)
+            self.shelf = self.library.get_shelf(shelf_name)
+            self.book = self.shelf.get_book(book_name)
+            self.refresh_pages()
+
+
     def on_pagesTree_cursor_changed(self, widget):
         model, sel = self.pagesTree.get_selection().get_selected()
         if sel != None:
             page_name = model.get_value(sel, 0)
             page = self.book.get_page(page_name)
             self.render_page(page)
-            
+
     def link_clicked(self, document, link):
         link.strip()
         if link.find('/') > 0:
@@ -119,7 +140,7 @@ class Main:
         else:
             book = self.book
             page = link
-            
+
         if book.has_page(page):
             actual_page = book.get_page(page)
             self.render_page(actual_page)
@@ -127,8 +148,8 @@ class Main:
             actual_page = models.WikiPage(book)
             actual_page.title = page
             editor.Editor(actual_page)
-            
-            
+
+
     def render_page(self, page):
         self.doc.clear()
         self.doc.open_stream('text/html')
@@ -148,7 +169,7 @@ class Main:
             self.window.show()
         else:
             self.window.hide()
-            
+
 
     def on_search_clicked(self, widget):
         pass
