@@ -8,22 +8,26 @@ import sys, os
 class WikiLibrary:
     def __init__(self, path):
         self.path = path
+        self._on_change = None
         if not os.path.exists(self.path):
              os.mkdir(self.path)
+    def on_change(self):
+        if self._on_change:
+            self._on_change()
 
     def set_on_change(self, func):
-        self.on_change = func
-    
+        self._on_change = func
+
     def get_shelves(self):
         return os.listdir(self.path)
-    
+
     def get_shelf(self, name):
         page_file = self.path + os.sep + name
         if not os.path.exists(page_file):
             raise Exception('The shelf %s does not exist'%name)
         shelf = WikiShelf(self, name)
         return shelf
-    
+
     def delete_shelf(self, name):
         page_file = self.path + os.sep + name
         os.rmdir(page_file)
@@ -36,12 +40,12 @@ class WikiShelf:
 
         if not os.path.exists(self.path):
              os.mkdir(self.path)
-             
+
     @apply
     def path():
         def get(self):
             return self._library.path + os.sep + self._name
-        return property(get)    
+        return property(get)
 
     @apply
     def name():
@@ -51,25 +55,28 @@ class WikiShelf:
             # TODO rename dir
             self._name = value
         return property(get, set)
-        
+
     def get_books(self):
         return os.listdir(self.path)
-    
+
     def get_book(self, name):
         book_dir = self.path + os.sep + name
         if not os.path.exists(book_dir):
             raise Exception('The book %s does not exist'%name)
         book = WikiBook(self, name)
         return book
-    
+
     def has_book(self, name):
         return name in self.get_books()
-    
+
     def delete_book(self, name):
         page_file = self.path + os.sep + name
         os.rmdir(page_file)
+        self.on_change()
+
+    def on_change(self):
         self._library.on_change()
-        
+
 
 class WikiBook:
     def __init__(self, shelf, name):
@@ -77,7 +84,7 @@ class WikiBook:
         self._name = name
         if not os.path.exists(self.path):
              os.mkdir(self.path)
-        
+
     @apply
     def path():
         def get(self):
@@ -92,11 +99,11 @@ class WikiBook:
             # TODO rename dir
             self._name = value
         return property(get, set)
-    
-        
+
+
     def get_pages(self):
         return os.listdir(self.path)
-    
+
     def get_page(self, name):
         page_file = self.path + os.sep + name
         if not os.path.exists(page_file):
@@ -104,43 +111,46 @@ class WikiBook:
         page = WikiPage(self, name)
         f = open(page_file, 'r')
         page.body = f.read()
-        f.close()        
+        f.close()
         return page
-    
+
     def has_page(self, name):
         return name in self.get_pages()
-    
+
     def delete_page(self, name):
         page_file = self.path + os.sep + name
         os.remove(page_file)
-        self._shelf._library.on_change()
-        
+        self.on_change()
+
+    def on_change(self):
+        self._shelf.on_change()
+
 class WikiPage:
     def __init__(self, book, original_title=None):
         self._book = book
         self._original_title = original_title
         self._title = original_title
         self._body = None
-    
+
     def save(self):
         f = open(self.path, 'w')
         f.write(self.body)
         f.close()
-        
+
         if self.original_title != None and self.original_title != self.title:
             page_file = self._book.path + os.sep + self.original_title
             os.remove(page_file)
         self._original_title = self.title
 
-        self._book._shelf._library.on_change()
+        self._book.on_change()
         return
-    
+
     @apply
     def path():
         def get(self):
             return self._book.path + os.sep + self.title
         return property(get)
-    
+
     @apply
     def title():
         def get(self):
@@ -148,7 +158,7 @@ class WikiPage:
         def set(self,value):
             self._title = value
         return property(get, set)
-    
+
     @apply
     def body():
         def get(self):
@@ -156,7 +166,7 @@ class WikiPage:
         def set(self,value):
             self._body = value
         return property(get, set)
-    
+
     @apply
     def original_title():
         def get(self):
