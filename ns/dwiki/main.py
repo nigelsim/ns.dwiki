@@ -112,13 +112,14 @@ class Main:
 
     def on_booksTree_cursor_changed(self, widget):
         model, sel = self.booksTree.get_selection().get_selected()
-        parent_iter = self.booksStore.iter_parent(sel)
-        if parent_iter != None:
-            shelf_name = model.get_value(parent_iter, 0)
-            book_name = model.get_value(sel, 0)
-            self.shelf = self.library.get_shelf(shelf_name)
-            self.book = self.shelf.get_book(book_name)
-            self.refresh_pages()
+        if sel != None:
+            parent_iter = self.booksStore.iter_parent(sel)
+            if parent_iter != None:
+                shelf_name = model.get_value(parent_iter, 0)
+                book_name = model.get_value(sel, 0)
+                self.shelf = self.library.get_shelf(shelf_name)
+                self.book = self.shelf.get_book(book_name)
+                self.refresh_pages()
 
 
     def on_pagesTree_cursor_changed(self, widget):
