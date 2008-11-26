@@ -65,9 +65,9 @@ class Main:
         path = os.getenv('HOME') + os.sep + '.dwiki'
         self.library = models.WikiLibrary(path)
         self.library.set_on_change(self.on_change)
-
-        self.shelf = models.WikiShelf(self.library, 'Default')
-        self.book = models.WikiBook(self.shelf, 'Default')
+        if len(self.library.get_shelves()) == 0:
+            self.shelf = models.WikiShelf(self.library, 'Default')
+            self.book = models.WikiBook(self.shelf, 'Default')
 
     def on_change(self):
         self.refresh_books()
