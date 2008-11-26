@@ -68,6 +68,9 @@ class Main:
         if len(self.library.get_shelves()) == 0:
             self.shelf = models.WikiShelf(self.library, 'Default')
             self.book = models.WikiBook(self.shelf, 'Default')
+        else:
+            self.shelf = self.library.get_shelf(self.library.get_shelves()[0])
+            self.book = self.shelf.get_book(self.shelf.get_books()[0])
 
     def on_change(self):
         self.refresh_books()
@@ -136,7 +139,7 @@ class Main:
             if self.shelf.has_book(book):
                 book = self.shelf.get_book(book)
             else:
-                book = WikiBook(self.shelf, book)
+                book = models.WikiBook(self.shelf, book)
             page = link[link.find('/')+1:]
         else:
             book = self.book
