@@ -78,16 +78,31 @@ class Main:
 
     def refresh_books(self):
         self.booksStore.clear()
+        path = None
         for shelf in self.library.get_shelves():
             shelf_iter = self.booksStore.append(None, [shelf])
             shelf = self.library.get_shelf(shelf)
             for book in shelf.get_books():
                 book_iter = self.booksStore.append(shelf_iter, [book])
+                if book == self.book.name and shelf.name == self.shelf.name:
+                    path = self.booksStore.get_path(book_iter)
+
+        if path != None:
+            self.booksTree.expand_to_path(path)#(self.shelf.name, self.book.name))
+            self.booksTree.get_selection().select_path(path)
+
 
     def refresh_pages(self):
+        path = None
         self.pagesStore.clear()
         for page in self.book.get_pages():
-            self.pagesStore.append([page])
+            page_iter = self.pagesStore.append([page])
+            if self.page != None and page == self.page.name:
+                path = self.pagesStore.get_path(page_iter)
+
+        if path != None:
+            self.pagesTree.expand_to_path(path)#(self.shelf.name, self.book.name))
+            self.pagesTree.get_selection().select_path(path)
 
     def setup_books(self):
         self.booksStore = gtk.TreeStore(str)
@@ -109,6 +124,7 @@ class Main:
         cell = gtk.CellRendererText()
         col.pack_start(cell, True)
         col.add_attribute(cell, 'text', 0)
+        self.page = None
 
     def on_newpage_clicked(self, widget):
         editor.Editor(models.WikiPage(self.book))
@@ -129,8 +145,8 @@ class Main:
         model, sel = self.pagesTree.get_selection().get_selected()
         if sel != None:
             page_name = model.get_value(sel, 0)
-            page = self.book.get_page(page_name)
-            self.render_page(page)
+            self.page = self.book.get_page(page_name)
+            self.render_page(self.page)
 
     def link_clicked(self, document, link):
         link.strip()
