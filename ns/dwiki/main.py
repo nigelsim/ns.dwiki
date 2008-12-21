@@ -97,7 +97,7 @@ class Main:
         self.pagesStore.clear()
         for page in self.book.get_pages():
             page_iter = self.pagesStore.append([page])
-            if self.page != None and page == self.page.name:
+            if self.page != None and page == self.page.title:
                 path = self.pagesStore.get_path(page_iter)
 
         if path != None:
