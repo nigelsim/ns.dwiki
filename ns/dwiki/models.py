@@ -132,6 +132,15 @@ class WikiBook:
     def on_change(self):
         self._shelf.on_change()
 
+    def push(self):
+        pass
+
+    def pull(self):
+        pass
+
+    def config(self):
+        pass
+
 
 class WikiShelf:
     book_factory = WikiBook
@@ -217,14 +226,18 @@ class GitWikiBook(WikiBook):
             os.mkdir(self.path)
             run('git add "%s" ; git commit -m "Creating new book"'%self.path, self.path)
 
+    def push(self):
+        run('git push', self.path)
+
+    def pull(self):
+        run('git pull', self.path)
+
+    def config(self):
+        run('git-gui', self.path)
+
 
 class GitWikiShelf(WikiShelf):
     book_factory = GitWikiBook
-    def push(self):
-        pass
-
-    def pull(self):
-        pass
 
     def get_books(self):
         return [book for book in os.listdir(self.path) if book != '.git']

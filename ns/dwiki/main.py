@@ -127,7 +127,20 @@ class Main:
         self.page = None
 
     def on_newpage_clicked(self, widget):
-        editor.Editor(models.WikiPage(self.book))
+        if self.book != None:
+            editor.Editor(models.WikiPage(self.book))
+
+    def on_push_clicked(self, widget):
+        if self.book != None:
+            self.book.push()
+
+    def on_pull_clicked(self, widget):
+        if self.book != None:
+            self.book.pull()
+
+    def on_preferences_clicked(self, widget):
+        if self.book != None:
+            self.book.config()
 
     def on_booksTree_cursor_changed(self, widget):
         model, sel = self.booksTree.get_selection().get_selected()

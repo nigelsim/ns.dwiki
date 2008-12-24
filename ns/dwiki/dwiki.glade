@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Mon Nov 24 21:34:23 2008 -->
+<!--Generated with glade3 3.4.5 on Wed Dec 24 23:40:47 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
     <property name="default_width">300</property>
@@ -23,11 +23,22 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkToolButton" id="sync">
+              <widget class="GtkToolButton" id="push">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Sync</property>
-                <property name="stock_id">gtk-refresh</property>
-                <signal name="clicked" handler="on_sync_clicked"/>
+                <property name="label" translatable="yes">Push</property>
+                <property name="stock_id">gtk-go-up</property>
+                <signal name="clicked" handler="on_push_clicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkToolButton" id="pull">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Pull</property>
+                <property name="stock_id">gtk-go-down</property>
+                <signal name="clicked" handler="on_pull_clicked"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
