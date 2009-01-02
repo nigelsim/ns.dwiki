@@ -43,9 +43,9 @@ class Main:
         self.renderArea = self.wTree.get_widget('renderArea')
         self.doc = gtkhtml2.Document()
         self.doc.connect('link_clicked', self.link_clicked)
-        html = gtkhtml2.View()
-        html.set_document(self.doc)
-        self.renderArea.add(html)
+        self.html = gtkhtml2.View()
+        self.html.set_document(self.doc)
+        self.renderArea.add(self.html)
 
         self.setup_books()
         self.setup_pages()
@@ -203,6 +203,12 @@ class Main:
         else:
             self.window.hide()
 
+    def on_MainWindow_key_press_event(self, widget, event):
+        if 'GDK_CONTROL_MASK' in event.state.value_names and event.keyval == 99:
+            selection = gtkhtml2.html_selection_get_text(self.html)
+            if selection != None:
+                cb = self.html.get_clipboard(gtk.gdk.SELECTION_CLIPBOARD)
+                cb.set_text(selection)
 
     def on_search_clicked(self, widget):
         pass
