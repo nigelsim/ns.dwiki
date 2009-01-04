@@ -132,6 +132,9 @@ class WikiBook:
     def on_change(self):
         self._shelf.on_change()
 
+    def new_page(self):
+        return WikiPage(self)
+
     def push(self):
         pass
 
@@ -225,6 +228,9 @@ class GitWikiBook(WikiBook):
         if not os.path.exists(self.path):
             os.mkdir(self.path)
             run('git add "%s" ; git commit -m "Creating new book"'%self.path, self.path)
+
+    def new_page(self):
+        return GitWikiPage(self)
 
     def push(self):
         run('git push', self.path)

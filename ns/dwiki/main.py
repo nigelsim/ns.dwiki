@@ -128,7 +128,7 @@ class Main:
 
     def on_newpage_clicked(self, widget):
         if self.book != None:
-            editor.Editor(models.WikiPage(self.book))
+            editor.Editor(self.book.new_page())
 
     def on_push_clicked(self, widget):
         if self.book != None:
