@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Jan  3 02:52:21 2009 -->
+<!--Generated with glade3 3.4.5 on Mon Jan  5 01:37:08 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
     <property name="default_width">300</property>
@@ -225,10 +225,18 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkTextView" id="editor">
+          <widget class="GtkScrolledWindow" id="scrolledwindow1">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="wrap_mode">GTK_WRAP_WORD</property>
+            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <child>
+              <widget class="GtkTextView" id="editor">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="wrap_mode">GTK_WRAP_WORD</property>
+              </widget>
+            </child>
           </widget>
           <packing>
             <property name="position">1</property>

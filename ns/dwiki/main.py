@@ -209,6 +209,8 @@ class Main:
             if selection != None:
                 cb = self.html.get_clipboard(gtk.gdk.SELECTION_CLIPBOARD)
                 cb.set_text(selection)
+        elif 'GDK_CONTROL_MASK' in event.state.value_names and event.keyval == 113:
+            gtk.main_quit()
 
     def on_search_clicked(self, widget):
         pass
