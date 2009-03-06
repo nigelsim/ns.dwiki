@@ -203,6 +203,7 @@ def run(command, path):
 
 class GitWikiPage(WikiPage):
     def save(self):
+        import ipdb ; ipdb.set_trace()
         has_moved = self.original_title != None and self.original_title != self.title
         if has_moved:
             f = open(self.original_title, 'w')
@@ -219,6 +220,7 @@ class GitWikiPage(WikiPage):
 
 
         self._original_title = self.title
+        self._book.on_change()
 
 class GitWikiBook(WikiBook):
     page_factory = GitWikiPage
