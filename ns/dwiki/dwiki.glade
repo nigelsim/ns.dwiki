@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Mon Jan  5 01:37:08 2009 -->
+<!--Generated with glade3 3.4.5 on Fri Mar  6 21:43:40 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
+    <property name="width_request">600</property>
     <property name="default_width">300</property>
     <property name="default_height">400</property>
     <signal name="key_press_event" handler="on_MainWindow_key_press_event"/>
@@ -105,6 +106,7 @@
                 <property name="can_focus">True</property>
                 <child>
                   <widget class="GtkTreeView" id="booksTree">
+                    <property name="width_request">150</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="headers_clickable">True</property>
@@ -117,6 +119,7 @@
                 </child>
                 <child>
                   <widget class="GtkTreeView" id="pagesTree">
+                    <property name="width_request">150</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
