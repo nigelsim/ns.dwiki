@@ -26,7 +26,7 @@ import gtk.glade
 import os
 
 import ns.dwiki
-from ns.dwiki import models 
+from ns.dwiki import models
 
 class Editor:
     def __init__(self, page):
@@ -36,12 +36,18 @@ class Editor:
         self.window = self.wTree.get_widget('EditorWindow')
         self.editor = self.wTree.get_widget('editor')
         self.title = self.wTree.get_widget('title')
-        
+
         self.editor.get_buffer().set_text(page.body or '')
         self.title.set_text(page.title or 'Untitled')
-        
+
+        try:
+            import gtkspell
+            gtkspell.Spell(self.editor)
+        except:
+            pass
+
         self.page = page
-        
+
         self.window.show()
 
     def on_save_clicked(self, widget):
