@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri Mar  6 21:43:40 2009 -->
+<!--Generated with glade3 3.4.5 on Thu May  7 17:31:17 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
     <property name="width_request">600</property>
@@ -21,7 +21,7 @@
                 <signal name="clicked" handler="on_newpage_clicked"/>
               </widget>
               <packing>
-                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
@@ -32,7 +32,7 @@
                 <signal name="clicked" handler="on_push_clicked"/>
               </widget>
               <packing>
-                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
@@ -43,7 +43,7 @@
                 <signal name="clicked" handler="on_pull_clicked"/>
               </widget>
               <packing>
-                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
@@ -54,7 +54,7 @@
                 <signal name="clicked" handler="on_preferences_clicked"/>
               </widget>
               <packing>
-                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
@@ -86,10 +86,6 @@
                   </widget>
                 </child>
               </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">False</property>
-              </packing>
             </child>
           </widget>
           <packing>
@@ -105,12 +101,19 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <child>
-                  <widget class="GtkTreeView" id="booksTree">
-                    <property name="width_request">150</property>
+                  <widget class="GtkScrolledWindow" id="scrolledwindow2">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="headers_clickable">True</property>
-                    <signal name="cursor_changed" handler="on_booksTree_cursor_changed"/>
+                    <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
+                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <child>
+                      <widget class="GtkTreeView" id="booksTree">
+                        <property name="width_request">150</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <signal name="cursor_changed" handler="on_booksTree_cursor_changed"/>
+                      </widget>
+                    </child>
                   </widget>
                   <packing>
                     <property name="resize">False</property>
@@ -118,14 +121,21 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkTreeView" id="pagesTree">
-                    <property name="width_request">150</property>
+                  <widget class="GtkScrolledWindow" id="scrolledwindow3">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                    <property name="headers_clickable">True</property>
-                    <signal name="button_press_event" handler="on_pagesTree_button_press_event"/>
-                    <signal name="cursor_changed" handler="on_pagesTree_cursor_changed"/>
+                    <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
+                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <child>
+                      <widget class="GtkTreeView" id="pagesTree">
+                        <property name="width_request">150</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
+                        <signal name="button_press_event" handler="on_pagesTree_button_press_event"/>
+                        <signal name="cursor_changed" handler="on_pagesTree_cursor_changed"/>
+                      </widget>
+                    </child>
                   </widget>
                   <packing>
                     <property name="resize">True</property>
@@ -187,7 +197,7 @@
                 <signal name="clicked" handler="on_save_clicked"/>
               </widget>
               <packing>
-                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
               </packing>
             </child>
             <child>
@@ -217,10 +227,6 @@
                   </widget>
                 </child>
               </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">False</property>
-              </packing>
             </child>
           </widget>
           <packing>
