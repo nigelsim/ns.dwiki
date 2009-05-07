@@ -163,6 +163,13 @@ class Main:
 
     def link_clicked(self, document, link):
         link.strip()
+        if link.startswith('http://') or \
+           link.startswith('https://') or \
+           link.startswith('ftp://'):
+            import webbrowser
+            webbrowser.open(link)
+            return
+
         if link.find('/') > 0:
             book = link[0:link.find('/')]
             if self.shelf.has_book(book):
